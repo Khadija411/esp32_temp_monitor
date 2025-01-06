@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Temperature Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>ESP32 Temperature Monitor</h1>
+    <canvas id="temperatureChart" width="400" height="200"></canvas>
+    <script>
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        const data = JSON.parse('{{ data | safe }}');
+        const timestamps = data.map(entry => entry.timestamp);
+        const temperatures = data.map(entry => entry.temperature);
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: temperatures,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'category'
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        setInterval(() => {
+            location.reload(); // Refresh data every 5 seconds
+        }, 5000);
+    </script>
+</body>
+</html>
